@@ -43,4 +43,3 @@ if (process.env.NODE_ENV === "production") {
 server.listen(port, () => {
   console.info(`server is running on http://localhost:${port}`);
 });
-// sudo systemctl start mongod
