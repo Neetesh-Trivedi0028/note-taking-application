@@ -1,0 +1,426 @@
+openapi: "3.0.2"
+info:
+  version: 1.0.0
+  title: Notes Taking Application
+servers:
+  - url: http://localhost:3000/api
+
+tags:
+  - name: Authentication
+    description: Operations related to user authentication
+  - name: Notes
+    description: Notes related operations
+
+paths:
+  /users/login:
+    post:
+      summary: Log into app
+      operationId: logIn
+      tags:
+        - Authentication
+      parameters:
+        - $ref: "#/components/parameters/headerPlatform"
+        - $ref: "#/components/parameters/headerVersion"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: "neetesh.trivedi@yopmail.com"
+              password: "user@123"
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                  format: password
+                  description: Password of registered user
+      responses:
+        200:
+          description: User profile with Auth token
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+
+  /users/logout:
+    get:
+      summary: logout user
+      operationId: logOutUser
+      tags:
+        - Authentication
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: "#/components/parameters/headerPlatform"
+        - $ref: "#/components/parameters/headerVersion"
+      responses:
+        200:
+          description: Success message indicating a user is logged out successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+        400:
+          $ref: "#/components/responses/BadRequestError"
+
+  /users/register:
+    post:
+      summary: register user into app
+      operationId: register
+      tags:
+        - Authentication
+      parameters:
+        - $ref: "#/components/parameters/headerPlatform"
+        - $ref: "#/components/parameters/headerVersion"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              username: Neetesh Trivedi
+              email: neeteshlearning@yopmail.com
+              password: "user@123"
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                  description: Email address of registered user
+                password:
+                  type: string
+                  format: password
+                  description: Password of registered user
+      responses:
+        200:
+          description: New User profile and Auth token
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+
+  /note/notes:
+    get:
+      summary: find all notes
+      operationId: findAllNotes
+      tags:
+        - Notes
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: "#/components/parameters/headerPlatform"
+        - $ref: "#/components/parameters/headerVersion"
+      responses:
+        200:
+          description: all notes
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Notes"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+    post:
+      summary: create a note
+      operationId: createNotes
+      tags:
+        - Notes
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: "#/components/parameters/headerPlatform"
+        - $ref: "#/components/parameters/headerVersion"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              title: "Test Title"
+              content: "Notes in details"
+              tags: ""
+            schema:
+              type: object
+              required:
+                - title
+                - content
+                - tags
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                tags:
+                  type: string
+      responses:
+        200:
+          description: note created!!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+
+  /note/notes/{id}:
+    get:
+      summary: get singe note
+      operationId: singleNote
+      tags:
+        - Notes
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: "#/components/parameters/headerPlatform"
+        - $ref: "#/components/parameters/headerVersion"
+        - name: id
+          in: path
+          description: id of notes
+          required: true
+          schema:
+            type: string
+            format: objectId
+            pattern: "^[a-fA-F0-9]{24}$"
+
+      responses:
+        201:
+          description: static page data
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+        400:
+          $ref: "#/components/responses/BadRequestError"
+    delete:
+      summary: delete a note
+      operationId: deletesingleNote
+      tags:
+        - Notes
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: "#/components/parameters/headerPlatform"
+        - $ref: "#/components/parameters/headerVersion"
+        - name: id
+          in: path
+          description: id of notes
+          required: true
+          schema:
+            type: string
+            format: objectId
+            pattern: "^[a-fA-F0-9]{24}$"
+      responses:
+        200:
+          description: deleted a note
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+        400:
+          $ref: "#/components/responses/BadRequestError"
+    put:
+      summary: update single note
+      operationId: updateSingleNote
+      tags:
+        - Notes
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: "#/components/parameters/headerPlatform"
+        - $ref: "#/components/parameters/headerVersion"
+        - name: id
+          in: path
+          description: id of note
+          required: true
+          schema:
+            type: string
+            format: objectId
+            pattern: "^[a-fA-F0-9]{24}$"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              title: "Updated Title"
+              content: "Updated content of the note"
+              tags: ""
+            schema:
+              type: object
+              required:
+                - title
+                - content
+                - tags
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                tags:
+                  type: string
+      responses:
+        200:
+          description: Note updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+        400:
+          $ref: "#/components/responses/BadRequestError"
+
+components:
+  parameters:
+    headerPlatform:
+      name: X-Notes-Platform
+      in: header
+      required: true
+      schema:
+        type: string
+        default: ios
+        enum:
+          - ios
+          - android
+    headerVersion:
+      name: X-Notes-Version
+      in: header
+      required: true
+      schema:
+        type: string
+        default: 1.0.0
+        pattern: '^[\d]+\.[\d]+\.[\d]+$'
+    queryPerPage:
+      in: query
+      name: perPage
+      description: number of records per page
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: integer
+    queryPage:
+      in: query
+      name: page
+      description: page number
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: integer
+
+  schemas:
+    ApiResponse:
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data: {}
+
+    User:
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+
+    Notes:
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+          format: email
+        tags:
+          type: string
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+
+  responses:
+    BadRequestError:
+      description: Request fails validation or doesn't meet all conditions for request
+      content:
+        application/json:
+          schema:
+            example:
+              success: false
+              message: "Validation failed"
+              data: ""
+            allOf:
+              - $ref: "#/components/schemas/ApiResponse"
+              - type: object
+                properties:
+                  data:
+                    type: object
+                    nullable: true
+    NotFoundError:
+      description: Requested resource was not found
+    UnauthorizedError:
+      description: Access token is missing or invalid
