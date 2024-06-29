@@ -35,7 +35,6 @@ exports.utcDateTime = (date = new Date()) => {
 };
 
 exports.protectRoute = async (req, res, next) => {
-  // console.log("req,header-1", req.headers.authorization);
   let token;
   //1 getting token and check of it's there
   if (req.headers.authorization) {
@@ -47,7 +46,7 @@ exports.protectRoute = async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(" ")[1];
   }
-  // console.log("check token", token);
+
   if (!token) {
     return res.unauthorized(null, "Unauthorized access !");
   }
