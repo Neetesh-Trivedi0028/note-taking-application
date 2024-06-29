@@ -7,7 +7,7 @@ let token;
 let id;
 
 beforeAll(async () => {
-  const mongoUri = "mongodb://127.0.0.1:27017/rest-api";
+  const mongoUri = process.env.MONGO_URI;
   await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

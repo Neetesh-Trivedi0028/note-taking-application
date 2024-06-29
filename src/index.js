@@ -1,11 +1,11 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-// process.on('uncaughtException',err=>{
-//     console.info("uncaughtException  🧨🧨 Shutting down ....");
-//     console.info(err.name,err.message);
-//     process.exit(1);
-// });
+process.on("uncaughtException", (err) => {
+  console.info("uncaughtException  🧨🧨 Shutting down ....");
+  console.info(err.name, err.message);
+  process.exit(1);
+});
 
 const app = require("./app");
 
