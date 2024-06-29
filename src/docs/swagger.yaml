@@ -97,7 +97,7 @@ paths:
           application/json:
             example:
               username: Neetesh Trivedi
-              email: neeteshlearning@yopmail.com
+              email: neetesh.trivedi@yopmail.com
               password: "user@123"
             schema:
               type: object

@@ -7,7 +7,6 @@ const mongoose = require("mongoose"),
 class NotesController {
   async createNotes(req, res, next) {
     try {
-      // console.log("body;;;;", req.body);
       const { title, content, tags } = req.body;
       const createNote = new Notes({ title, content, tags });
       const createdNote = await createNote.save();
@@ -19,7 +18,6 @@ class NotesController {
 
   async findAllNotes(req, res, next) {
     try {
-      // console.log("req,header2", req.headers);
       const findAllNotes = await Notes.find();
       return res.success({ findAllNotes }, "find all notes successfuly !!");
     } catch (err) {
@@ -29,7 +27,6 @@ class NotesController {
 
   async findSingleNotes(req, res, next) {
     try {
-      // console.log("req.params;;;;", req.params);
       const findSingleNote = await Notes.findOne({
         _id: new ObjectId(req.params.id),
       });
@@ -63,8 +60,6 @@ class NotesController {
 
   async deleteSingleNotes(req, res, next) {
     try {
-      // console.log("req.params;;;;", req.params);
-      // return false;
       const findSingleNote = await Notes.findOneAndDelete({
         _id: new ObjectId(req.params.id),
       });
