@@ -18,7 +18,22 @@ class NotesController {
 
   async findAllNotes(req, res, next) {
     try {
-      const findAllNotes = await Notes.find();
+      let { page = 1 } = req.query;
+      page = parseInt(page);
+      if (isNaN(page) || page < 1) {
+        page = 1;
+      }
+      let skip;
+      let limit;
+      if (page) {
+        limit = 10;
+        skip = (parseInt(page) - 1) * limit;
+      }
+      const findAllNotes = await Notes.find()
+        .sort({ created: -1 })
+        .skip(skip)
+        .limit(limit);
+
       return res.success({ findAllNotes }, "find all notes successfuly !!");
     } catch (err) {
       return next(err);

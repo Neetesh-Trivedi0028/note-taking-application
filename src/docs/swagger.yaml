@@ -146,6 +146,14 @@ paths:
       parameters:
         - $ref: "#/components/parameters/headerPlatform"
         - $ref: "#/components/parameters/headerVersion"
+        - name: page
+          in: query
+          description: paging start with 1
+          required: false
+          schema:
+            type: number
+            default: "1"
+            minimum: 1
       responses:
         200:
           description: all notes
