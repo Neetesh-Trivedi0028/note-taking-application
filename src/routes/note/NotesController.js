@@ -21,7 +21,7 @@ class NotesController {
       let { page = 1 } = req.query;
       page = parseInt(page);
       if (isNaN(page) || page < 1) {
-        page = 1;
+        return res.success({}, "page number should be 1 !!");
       }
       let skip;
       let limit;
